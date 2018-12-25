@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1> {% block title %}New Diary{% endblock %}</h1>
+{% endblock%}
+
+{% block content %}
+    <form method="post">
+        <label for="title">Title</label>
+        <input name="title" id="title" 
+            value="{{ request.form['title'] }}" required>
+
+        <label for="dirname">Dirname</label>
+        <input name="dirname" id="dirname" 
+            value="{{ request.form['dirname'] }}">
+
+        <label for="tags">Tags</label>
+        <input name="tags" id="tags" 
+            value="{{ request.form['tags'] }}">
+
+        <label for="body">Body</label>
+        <textarea name="body" id="body">{{ request.form['body'] }}</textarea>
+
+        <input type="submit" value="Save">
+    </form>
+{% endblock%}

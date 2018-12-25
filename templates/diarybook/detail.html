@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}{{ post['title'] }}{% endblock %}</h1>
+    <a class="action" href="{{ url_for('diarybook.index')}}">Back</a>
+    {% if g.user['id'] == post['author_id'] %}
+        <a class="action" href="{{ url_for('diarybook.update', 
+        id=post['id']) }}">Edit</a>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <article class="detail">
+        <header>
+            <div>
+                <div class="about">by {{ g.user['username'] }} on {{
+                post['created'].strftime('%Y-%m-%d') }}, in Dir({{
+                post['dirname']}})</div>
+                {% if tags %}
+                    <div class="about"> {% for tag in tags %}{{ tag['name'] }}
+                        {% if not loop.last %},&nbsp&nbsp{% endif %}
+                        {% endfor %} </div>
+                {% endif %}
+            </div>
+        </header>
+        <p class="body">{{ post['body'] }}</p>
+    </article>
+{% endblock %}

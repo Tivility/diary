@@ -27,5 +27,3 @@ CREATE TABLE tag (
 
     FOREIGN KEY (post_id) REFERENCES post(id)
 );
-
-

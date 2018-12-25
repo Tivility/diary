@@ -31,5 +31,8 @@ def create_app(test_config=None):
     from diary import diarybook
     app.register_blueprint(diarybook.bp)
     app.add_url_rule('/', endpoint='index')
-
+    
+    from diary import search
+    app.register_blueprint(search.bp)     
+    
     return app

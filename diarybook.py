@@ -30,12 +30,22 @@ def index():
         posts = db.execute(
             'SELECT p.id, title, body, created, author_id, username'
             ' FROM post p JOIN user u ON p.author_id = u.id'
-            ' WHERE u.id = ?'
-            ' ORDER BY created DESC', (g.user['id'], )
+#            ' WHERE u.id = ?'
+#            ' ORDER BY created DESC', (g.user['id'], )
+            ' ORDER BY created DESC'
         ).fetchall()
     else :
     # Todo: add an welcome post and show welcome to register
-        posts = (())
+        posts = db.execute(
+            'SELECT id, title, body, created, author_id'
+            ' FROM post'
+            ' WHERE author_id = 0'
+        ).fetchall()
+    print("show posts")
+    for post in posts:
+        for item in post:
+            print(item)
+    print("show posts end")
     return render_template('diarybook/index.html', posts=posts)
 
 @bp.route('/<int:id>', methods=('GET', 'POST'))
@@ -85,14 +95,14 @@ def create():
             db.execute(
                 'INSERT INTO post (title, body, author_id, dirname, tags)'
                 ' VALUES (?, ?, ?, ?, ?)',
-                (title, body, g.user['id'], dirname, tags)
+                (title, body, g.user['id'], dirname.lower(), tags.lower())
             )
             db.commit()
             post_id = db.execute(
                 'SELECT last_insert_rowid() newid'
             ).fetchone()[0]
             print("post_id:", post_id)
-            taglist = tags.split(", ");
+            taglist = tags.lower().replace(", ", ",").split(",")
             for tag in taglist:
                 print ("tag: ", tag)
                 db.execute(
@@ -131,12 +141,12 @@ def update(id):
             db = get_db()
             db.execute(
                 'UPDATE post SET title = ?, body = ?, dirname = ?, tags = ?'
-                ' WHERE id = ?', (title, body, dirname, tags, id)
+                ' WHERE id = ?', (title, body, dirname.lower(), tags.lower(), id)
             )
             db.commit()
             db.execute('DELETE FROM tag WHERE post_id = ?', (id,))
             db.commit()
-            taglist = tags.split(", ");
+            taglist = tags.lower().replace(", ", ",").split(",")
             for tag in taglist:
                 print ("tag: ", tag)
                 db.execute(

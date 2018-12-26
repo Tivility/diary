@@ -27,3 +27,24 @@ CREATE TABLE tag (
 
     FOREIGN KEY (post_id) REFERENCES post(id)
 );
+
+INSERT INTO user (
+    username, password
+) VALUES (
+    0, 0
+);
+
+
+INSERT INTO post (
+    title, 
+    body, 
+    author_id, 
+    dirname, 
+    tags
+) VALUES (
+    "Welcome!", 
+    "Welcome to the memory river!\nYou can write your diary there!",
+    0, 
+    "auto",
+    ""
+);

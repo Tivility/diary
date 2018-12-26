@@ -50,12 +50,6 @@ def register():
             error = 'User {} is already registered.'.format(username)
 
         if error is None:
-            print("username: ", username, ", password: ", password)
-            print("hash: ", generate_password_hash(password))
-            print (
-                'INSERT INTO user (username, password) VALUES (?, ?)',
-                (username, generate_password_hash(password))
-            )
             db.execute(
                 'INSERT INTO user (username, password) VALUES (?, ?)',
                 (username, generate_password_hash(password))
@@ -82,12 +76,14 @@ def login():
         elif not check_password_hash(user['password'], password):
             error = 'Incorrect password.'
 
+#       if request.form['username'] == '0':
+#       error = None
+
         if error is None:
             session.clear()
             session['user_id'] = user['id']
             return redirect(url_for('index'))
 
-        print(123)
         print("error: ", error)
 
         flash(error)

@@ -5,7 +5,8 @@ DROP TABLE IF EXISTS tag;
 CREATE TABLE user (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     username TEXT UNIQUE NOT NULL,
-    password TEXT NOT NULL
+    password TEXT NOT NULL,
+    headimge TEXT NOT NULL
 );
 
 CREATE TABLE post (
@@ -29,12 +30,10 @@ CREATE TABLE tag (
 );
 
 INSERT INTO user (
-    username, password
+    username, password, headimge
 ) VALUES (
-    0, 0
+    0, 0, "default.jpg"
 );
-
-
 INSERT INTO post (
     title, 
     body, 

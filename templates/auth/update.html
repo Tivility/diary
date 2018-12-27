@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1>{% block title %}Update{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        <label for="username">Username</label>
+        <input name="username" id="username" 
+            value="{{ request.form['username'] or post['username'] }}" required>
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+        <input type="submit" valve="submit">
+    </form>
+    <hr>
+    <form action="{{ url_for('auth.updimg', id=g.user['id']) }}">
+        <input type="submit" value="Change head image">
+    </form>
+{% endblock %}

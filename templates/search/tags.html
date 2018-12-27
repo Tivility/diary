@@ -5,13 +5,10 @@
 {% endblock %}
 
 {% block content %}
-    <article class="post"> <!--Todo: change css--!>
+    <article class="post"> 
         {% for post in posts %}
-            <label><a class="action" href="{{ url_for('search.searchtag',
+            <p><label><a class="action" href="{{ url_for('search.searchtag',
             name=post['name']) }}">{{ post['name'] }}</label>
-            {% if not loop.end %}
-                <br>
-            {% endif %}
         {% endfor %}
     </article>
 {% endblock %}

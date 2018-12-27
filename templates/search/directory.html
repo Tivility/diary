@@ -5,13 +5,10 @@
 {% endblock %}
 
 {% block content %}
-    <article class="post"> <!--Todo: change css--!>
+    <article class="post">
         {% for post in posts %}
-            <label><a class="action" href="{{ url_for('search.dirdetail',
+            <p><label><a class="action" href="{{ url_for('search.dirdetail',
             dirname=post['dirname']) }}">{{ post['dirname'] }}</label>
-            {% if not loop.end %}
-                <br>
-            {% endif %}
         {% endfor %}
     </article>
 {% endblock %}

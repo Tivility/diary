@@ -17,8 +17,12 @@ def directory():
     if id is None:
         return redirect('index')
     posts = db.execute(
-        'SELECT DISTINCT dirname FROM post WHERE author_id = ?', (id,)
+        'SELECT DISTINCT dirname'
+        ' FROM post' 
+        ' WHERE author_id = ?'
+        ' AND dirname != "trash"', (id,)
     ).fetchall()
+    db.commit()
 
     return render_template('search/directory.html', posts=posts)
 
@@ -31,6 +35,7 @@ def dirdetail(dirname):
         ' FROM post WHERE dirname = ? AND author_id = ?',
         (dirname, g.user['id'])
     ).fetchall()
+    db.commit()
 
     return render_template('search/dirdetail.html', 
             posts=posts, dirname=dirname)
@@ -47,6 +52,7 @@ def tags():
         ' FROM tag t JOIN post p ON t.post_id = p.id'
         ' WHERE p.author_id = ?', (g.user['id'],)
     ).fetchall()
+    db.commit()
     for post in posts:
         print("tag: ", post['name'])
     return render_template('search/tags.html', posts=posts)
@@ -60,4 +66,5 @@ def searchtag(name):
         ' FROM post p JOIN tag t ON p.id = t.post_id'
         ' WHERE t.name = ?', (name,)
     ).fetchall()
+    db.commit()
     return render_template('search/searchtag.html', posts=posts, name=name)

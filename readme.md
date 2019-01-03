@@ -12,7 +12,7 @@
 1. directory
     - [x] multi-directory in one page  
     - [ ] open and close direcotry  
-    - [ ] delate diary will move to the dir 'trash'
+    - [x] delate diary will move to the dir 'trash'
         - hide dir trash and open trash interface
 
 2. tag  

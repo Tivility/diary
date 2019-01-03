@@ -235,3 +235,16 @@ def timeline():
     return render_template('diarybook/timeline.html', posts = posts)
 
 
+@bp.route('/trash', methods=('GET', 'POST'))
+@login_required
+def trash():
+    db = get_db()
+    posts = db.execute(
+        'SELECT id, title, body, created, author_id, tags'
+        ' FROM post WHERE dirname = "trash" AND author_id = ?',
+        (g.user['id'],)
+    ).fetchall()
+    db.commit()
+
+    return render_template('search/dirdetail.html', 
+            posts=posts, dirname="trash")

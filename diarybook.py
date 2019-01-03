@@ -6,15 +6,19 @@ from werkzeug.exceptions import abort
 from diary.auth import login_required
 from diary.db import get_db
 
+import time
+
 bp = Blueprint('diarybook', __name__)
 
 
 def get_post(id, check_author=True):
-    post = get_db().execute(
+    db = get_db()
+    post = db.execute(
         'SELECT p.id, title, body, created, author_id, username, dirname, tags'
         ' FROM post p JOIN user u ON p.author_id = u.id'
         ' WHERE p.id = ?', (id,)
     ).fetchone()
+    db.commit()
     if (post is None):
         abort(404, "Post id {0} dosn't exist.".format(id))
 
@@ -33,13 +37,14 @@ def index():
             ' WHERE u.id = ? AND dirname != "trash"'
             ' ORDER BY created DESC', (g.user['id'], )
         ).fetchall()
+        db.commit()
     else :
-    # Todo: add an welcome post and show welcome to register
         posts = db.execute(
             'SELECT id, title, body, created, author_id'
             ' FROM post'
             ' WHERE author_id = 0'
         ).fetchall()
+        db.commit()
     print("show posts")
     for post in posts:
         for item in post:
@@ -57,9 +62,11 @@ def detail(id):
         ' FROM post'
         ' WHERE id = ?', (id,)
     ).fetchone()
+    db.commit()
     tags = db.execute(
         'SELECT name FROM tag WHERE post_id = ?', (id,)
     ).fetchall()
+    db.commit()
     if (tags):
         print("show tags:")
         for item in tags:
@@ -166,7 +173,6 @@ def update(id):
 @bp.route('/<int:id>/delete', methods=('POST',))
 @login_required
 def delete(id):
-    get_post(id)
     db = get_db()
     db.execute('DELETE FROM tag WHERE post_id = ?', (id,))
     db.commit()
@@ -177,4 +183,55 @@ def delete(id):
     )
     db.commit()
     return redirect(url_for('diarybook.index'))
+
+@bp.route('/timeline', methods=('GET', 'POST'))
+@login_required
+def timeline():
+    db = get_db()
+    if (request.method == 'POST'):
+
+        yy = request.form['sy']
+        if not yy:
+            yy = '1970'
+        mm = request.form['sm']
+        if not mm:
+            mm = '01'
+        dd = request.form['sd']
+        if not dd:
+            dd = '01'
+        st = '-'.join([yy, mm, dd])
+
+        yy = request.form['ey']
+        mm = request.form['em']
+        dd = request.form['ed']
+        ed = '-'.join([yy, mm, dd])
+        if ((not yy) or (not mm) or (not dd)):
+            ed = time.strftime('%Y-%m-%d', time.localtime(time.time()))
+
+        print(st)
+        print(ed)
+
+        id = g.user['id']
+        posts = db.execute(
+            'SELECT id, title, body, created, author_id, dirname'
+            ' FROM post'
+            ' WHERE author_id = ?'
+            ' AND date(created) >= date(?)'
+            ' AND date(created) <= date(?)'
+            ' AND dirname != "trash"'
+            ' ORDER BY created DESC', (id, st, ed)
+        ).fetchall()
+        db.commit()
+
+        return render_template('diarybook/index.html', posts = posts)
+
+    else :
+        posts = db.execute(
+            'SELECT id, title, body, created, author_id'
+            ' FROM post'
+            ' WHERE author_id = 0'
+        ).fetchall()
+        db.commit()
+    return render_template('diarybook/timeline.html', posts = posts)
+
 

@@ -3,6 +3,7 @@
 {% block header %}
     <h1>{% block title %}Diary{% endblock %}</h1>
     {% if g.user %}
+        <a class="action" href="{{ url_for('diarybook.timeline') }}">Time Rievr</a>
         <a class="action" href="{{ url_for('diarybook.create') }}">New</a>
     {% endif %}
 {% endblock %}

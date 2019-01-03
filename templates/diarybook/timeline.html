@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block header %}
+    <h1> {% block title %}Time Line{% endblock %}</h1>
+{% endblock%}
+
+{% block content %}
+    <form method="post">
+        <label for="sy">Start Year</label>
+        <input name="sy" id="sy">
+
+        <label for="sm">Start Month</label>
+        <input name="sm" id="sm">
+
+        <label for="sd">Start Day</label>
+        <input name="sd" id="sd">
+
+        <label for="ey">End Year</label>
+        <input name="ey" id="ey">
+
+        <label for="em">End Month</label>
+        <input name="em" id="em">
+
+        <label for="ed">End Day</label>
+        <input name="ed" id="ed">
+
+        <input type="submit" value="Search">
+    </form>
+{% endblock%}
